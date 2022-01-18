@@ -19,6 +19,7 @@ class HashFile(BinaryFile):
             for _ in range(self.b):
                 block = self.blocking_factor*[self.get_empty_rec()]
                 self.write_block(f, block)
+
     def trazenje_u_rasutoj_sa_lin_traz(self,id):
         broj = 99
         broj1 = 1
@@ -51,6 +52,7 @@ class HashFile(BinaryFile):
         else:
             if rm<=rp and rm>r:
                 nadjen = 1
+        return nadjen
 
     def brisanje_u_ras_dat_sa_lin_traz(self,r,q,f):
         pomeranje = 1
@@ -72,16 +74,16 @@ class HashFile(BinaryFile):
                         r = 1 + r % self.b
                         f.seek(r * self.block_size)
                         block = self.read_block(f)
-                        q=0
+                        q=-1
                     q = q+1
                     if block[q] != -1 and r != rp:
-                        self.provera_kandidata(block[q]["id"],r,rp,nadjen)
+                        nadjen = self.provera_kandidata(block[q]["id"],r,rp,nadjen)
                     else:
                         pomeranje = 0
                 if nadjen == 1:
-                    blockp[0] = block[q]
+                    blockp[len(blockp)-1] = block[q]
                 else:
-                    blockp[0] = {"id": self.empty_key, "ime_i_prezime": "", "datum_i_vreme": "", "oznaka_spasioca":"","trajanje_spasavanja":0,"status": 0}
+                    blockp[len(blockp)-1] = self.get_empty_rec()
         if blockp !=[]:
             self.write_block(f,blockp)
 
@@ -96,11 +98,21 @@ class HashFile(BinaryFile):
                         f.seek(r*self.block_size)
                         block = self.read_block(f)
                         block[q]["datum_i_vreme"] = i["datum_i_vreme"]
+                        self.write_block(f,block)
                 elif i["svrha"]==1 and broj1==0:
-                    self.insert_record(i)
+                    broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
+                    if broj==1 and broj1==0:
+                        f.seek(r*self.block_size)
+                        block = self.read_block(f)
+                        block[q] = i
+                        self.write_block(f,block)
+                    elif broj1==1:
+                        print("Nedostatak lokacija")
+                    else:
+                        print("slog sa datom vrednoscu kljuca vec postoji")
 
-
-
+# Ispod je nevazno
+"""
     def __insert_overflow(self, f, rec):
         f.seek(self.b * self.block_size)
 
@@ -212,3 +224,4 @@ class HashFile(BinaryFile):
                 f.seek(-self.record_size, 1)
                 self.write_record(f, rec)
             return found
+"""
