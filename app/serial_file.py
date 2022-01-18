@@ -99,6 +99,21 @@ class SerialFile(BinaryFile):
                     lista[j], lista[j+1] = lista[j+1], lista[j]
         return lista
 
+    def get_content_of_file(self):
+
+        lista = []
+        with open(self.filename, "rb") as f:
+            while True:
+                block = self.read_block(f)
+                if not block:
+                    break
+                for i in range(self.blocking_factor):
+                    if block[i].get("id") == self.empty_key:
+                        break
+                    lista.append(block[i])
+
+        return lista
+
     def find_by_id(self, id):
         i = 0
         with open(self.filename, "rb") as f:

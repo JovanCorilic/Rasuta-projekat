@@ -26,13 +26,13 @@ class HashFile(BinaryFile):
         pocetni = r
         with open(self.filename, "rb+") as f:
             while broj == 99:
-                q=1
+                q=0
                 block = self.read_block(f)
                 while q<=self.blocking_factor and broj==99:
-                    if id==block[q-1]["id"]:
+                    if id==block[q]["id"]:
                         broj = 0
                     else:
-                        if block[q-1]["id"]==-1:
+                        if block[q]["id"]==-1:
                             broj=1
                         else:
                             q = q+1
@@ -52,8 +52,54 @@ class HashFile(BinaryFile):
             if rm<=rp and rm>r:
                 nadjen = 1
 
-    def brisanje_u_ras_dat_sa_lin_traz(self,r,q):
+    def brisanje_u_ras_dat_sa_lin_traz(self,r,q,f):
         pomeranje = 1
+        f.seek(r*self.block_size)
+        block = self.read_block(f)
+        blockp=[]
+        while pomeranje ==1:
+            while q<self.blocking_factor and block[q]["id"]!=-1:
+                block[q] = block[q+1]
+                q = q + 1
+            blockp = block
+            rp = r
+            if block[q]["id"]==-1:
+                pomeranje=0
+            else:
+                nadjen = 0
+                while nadjen==0 and pomeranje ==1:
+                    if q==self.blocking_factor:
+                        r = 1 + r % self.b
+                        f.seek(r * self.block_size)
+                        block = self.read_block(f)
+                        q=0
+                    q = q+1
+                    if block[q] != -1 and r != rp:
+                        self.provera_kandidata(block[q]["id"],r,rp,nadjen)
+                    else:
+                        pomeranje = 0
+                if nadjen == 1:
+                    blockp[0] = block[q]
+                else:
+                    blockp[0] = {"id": self.empty_key, "ime_i_prezime": "", "datum_i_vreme": "", "oznaka_spasioca":"","trajanje_spasavanja":0,"status": 0}
+        if blockp !=[]:
+            self.write_block(f,blockp)
+
+    def azur_ras_sa_lin_raz_dir(self,lista):
+        with open(self.filename, "rb+") as f:
+            for i in lista:
+                broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
+                if broj==0:
+                    if i["svrha"]==4:
+                        self.brisanje_u_ras_dat_sa_lin_traz(r,q,f)
+                    elif i["svrha"]==2:
+                        f.seek(r*self.block_size)
+                        block = self.read_block(f)
+                        block[q]["datum_i_vreme"] = i["datum_i_vreme"]
+                elif i["svrha"]==1 and broj1==0:
+                    self.insert_record(i)
+
+
 
     def __insert_overflow(self, f, rec):
         f.seek(self.b * self.block_size)
