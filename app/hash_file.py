@@ -20,6 +20,11 @@ class HashFile(BinaryFile):
                 block = self.blocking_factor*[self.get_empty_rec()]
                 self.write_block(f, block)
 
+    def ucitavanje_primera(self,lista):
+        with open(self.filename, "wb") as f:
+            for i in lista:
+                self.insert_novi_element(f,i)
+
     def trazenje_u_rasutoj_sa_lin_traz(self,id):
         broj = 99
         broj1 = 1
@@ -100,16 +105,21 @@ class HashFile(BinaryFile):
                         block[q]["datum_i_vreme"] = i["datum_i_vreme"]
                         self.write_block(f,block)
                 elif i["svrha"]==1 and broj1==0:
-                    broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
-                    if broj==1 and broj1==0:
-                        f.seek(r*self.block_size)
-                        block = self.read_block(f)
-                        block[q] = i
-                        self.write_block(f,block)
-                    elif broj1==1:
-                        print("Nedostatak lokacija")
-                    else:
-                        print("slog sa datom vrednoscu kljuca vec postoji")
+                    self.insert_novi_element(f,i)
+
+    def insert_novi_element(self,f,i):
+        broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
+        if broj == 1 and broj1 == 0:
+            f.seek(r * self.block_size)
+            block = self.read_block(f)
+            block[q] = i
+            self.write_block(f, block)
+        elif broj1 == 1:
+            block = self.blocking_factor * [self.get_empty_rec()]
+            self.write_block(f, block)
+            self.insert_novi_element(f,i)
+        else:
+            print("slog sa datom vrednoscu kljuca vec postoji")
 
 # Ispod je nevazno
 """
