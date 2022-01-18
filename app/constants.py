@@ -4,6 +4,6 @@ FMT = "i60s20s5siii"
 CODING = "ascii"
 
 F = 5
-b = F
+
 B = 9
 k = 1

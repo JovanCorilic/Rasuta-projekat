@@ -6,6 +6,7 @@ from app.binary_file import BinaryFile
 
 
 class HashFile(BinaryFile):
+    #HashFile(fn, rec, F, B)
     def __init__(self, filename, record, blocking_factor, b, empty_key=-1):
         BinaryFile.__init__(self, filename, record, blocking_factor, empty_key)
         self.b = b
@@ -13,11 +14,46 @@ class HashFile(BinaryFile):
     def hash(self, id):
         return id % self.b
 
-    def init_file(self):
+    def formiranje_prazne_datoteke(self):
         with open(self.filename, "wb") as f:
             for _ in range(self.b):
                 block = self.blocking_factor*[self.get_empty_rec()]
                 self.write_block(f, block)
+    def trazenje_u_rasutoj_sa_lin_traz(self,id):
+        broj = 99
+        broj1 = 1
+        r = self.hash(id)
+        pocetni = r
+        with open(self.filename, "rb+") as f:
+            while broj == 99:
+                q=1
+                block = self.read_block(f)
+                while q<=self.blocking_factor and broj==99:
+                    if id==block[q-1]["id"]:
+                        broj = 0
+                    else:
+                        if block[q-1]["id"]==-1:
+                            broj=1
+                        else:
+                            q = q+1
+                if q>self.blocking_factor:
+                    r = r % self.b +1
+                    if r==pocetni :
+                        broj=1
+                        broj1=1
+        return broj,broj1,r,q
+
+    def provera_kandidata(self, kljuc,r,rp,nadjen):
+        rm = self.hash(kljuc)
+        if r>rp:
+            if rm>r or rm<=rp:
+                nadjen = 1
+        else:
+            if rm<=rp and rm>r:
+                nadjen = 1
+
+    def brisanje_u_ras_dat_sa_lin_traz(self,r,q):
+        pomeranje = 1
 
     def __insert_overflow(self, f, rec):
         f.seek(self.b * self.block_size)
