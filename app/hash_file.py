@@ -20,19 +20,16 @@ class HashFile(BinaryFile):
                 block = self.blocking_factor*[self.get_empty_rec()]
                 self.write_block(f, block)
 
-    def ucitavanje_primera(self,lista):
-        with open(self.filename, "wb") as f:
-            for i in lista:
-                self.insert_novi_element(f,i)
 
     def trazenje_u_rasutoj_sa_lin_traz(self,id):
         broj = 99
-        broj1 = 1
+        broj1 = 0
         r = self.hash(id)
         pocetni = r
         with open(self.filename, "rb+") as f:
             while broj == 99:
                 q=0
+                f.seek(r*self.block_size)
                 block = self.read_block(f)
                 while q<=self.blocking_factor and broj==99:
                     if id==block[q]["id"]:
@@ -42,7 +39,7 @@ class HashFile(BinaryFile):
                             broj=1
                         else:
                             q = q+1
-                if q>self.blocking_factor:
+                if q>=self.blocking_factor:
                     r = r % self.b +1
                     if r==pocetni :
                         broj=1
@@ -65,7 +62,7 @@ class HashFile(BinaryFile):
         block = self.read_block(f)
         blockp=[]
         while pomeranje ==1:
-            while q<self.blocking_factor and block[q]["id"]!=-1:
+            while q<=self.blocking_factor and block[q]["id"]!=-1:
                 block[q] = block[q+1]
                 q = q + 1
             blockp = block
@@ -110,16 +107,33 @@ class HashFile(BinaryFile):
     def insert_novi_element(self,f,i):
         broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
         if broj == 1 and broj1 == 0:
-            f.seek(r * self.block_size)
-            block = self.read_block(f)
-            block[q] = i
-            self.write_block(f, block)
+            with open(self.filename, "rb+") as a:
+                a.seek(r * self.block_size)
+                block = self.read_block(a)
+                block[q] = i
+                print("r je "+str(r)+" a q je"+str(q))
+                a.seek(r * self.block_size)
+                self.write_block(a, block)
         elif broj1 == 1:
-            block = self.blocking_factor * [self.get_empty_rec()]
-            self.write_block(f, block)
-            self.insert_novi_element(f,i)
+            print("nema memorije")
+
         else:
+            print(i["id"])
             print("slog sa datom vrednoscu kljuca vec postoji")
+
+    def print_file(self):
+        with open(self.filename, "rb") as f:
+            for i in range(self.b):
+                block = self.read_block(f)
+                print("Bucket {}".format(i + 1))
+                self.print_block(block)
+
+            print("Overflow zone:")
+            while True:
+                rec = self.read_record(f)
+                if not rec:
+                    break
+                print(rec)
 
 # Ispod je nevazno
 """
