@@ -61,9 +61,13 @@ class HashFile(BinaryFile):
         f.seek(r*self.block_size)
         block = self.read_block(f)
         blockp=[]
+        rp=0
         while pomeranje ==1:
-            while q<=self.blocking_factor and block[q]["id"]!=-1:
-                block[q] = block[q+1]
+            while q<self.blocking_factor and block[q]["id"]!=-1:
+                try:
+                    block[q] = block[q+1]
+                except:
+                    pass
                 q = q + 1
             blockp = block
             rp = r
@@ -78,7 +82,7 @@ class HashFile(BinaryFile):
                         block = self.read_block(f)
                         q=-1
                     q = q+1
-                    if block[q] != -1 and r != rp:
+                    if block[q]["id"] != -1 and r != rp:
                         nadjen = self.provera_kandidata(block[q]["id"],r,rp,nadjen)
                     else:
                         pomeranje = 0
@@ -87,6 +91,7 @@ class HashFile(BinaryFile):
                 else:
                     blockp[len(blockp)-1] = self.get_empty_rec()
         if blockp !=[]:
+            f.seek(rp * self.block_size)
             self.write_block(f,blockp)
 
     def azur_ras_sa_lin_raz_dir(self,lista):
@@ -100,26 +105,30 @@ class HashFile(BinaryFile):
                         f.seek(r*self.block_size)
                         block = self.read_block(f)
                         block[q]["datum_i_vreme"] = i["datum_i_vreme"]
+                        f.seek(r * self.block_size)
                         self.write_block(f,block)
                 elif i["svrha"]==1 and broj1==0:
-                    self.insert_novi_element(f,i)
+                    temp = i
+                    self.insert_novi_element({"id": temp["id"], "ime_i_prezime": temp["ime_i_prezime"],
+                                              "datum_i_vreme": temp["datum_i_vreme"],
+                                              "oznaka_spasioca":temp["oznaka_spasioca"],
+                                              "trajanje_spasavanja":temp["trajanje_spasavanja"],
+                                              "status": temp["status"]})
 
-    def insert_novi_element(self,f,i):
+    def insert_novi_element(self,i):
         broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
         if broj == 1 and broj1 == 0:
             with open(self.filename, "rb+") as a:
                 a.seek(r * self.block_size)
                 block = self.read_block(a)
                 block[q] = i
-                print("r je "+str(r)+" a q je"+str(q))
+                #print("r je "+str(r)+" a q je"+str(q))
                 a.seek(r * self.block_size)
                 self.write_block(a, block)
         elif broj1 == 1:
-            print("nema memorije")
-
+            print("Nema memorije")
         else:
-            print(i["id"])
-            print("slog sa datom vrednoscu kljuca vec postoji")
+            print("slog sa datom vrednoscu kljuca " + str(i["id"])+ " vec postoji")
 
     def print_file(self):
         with open(self.filename, "rb") as f:

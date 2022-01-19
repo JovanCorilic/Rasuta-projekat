@@ -35,7 +35,7 @@ class SerialFile(BinaryFile):
                 block = self.blocking_factor*[{"id": self.empty_key, "ime_i_prezime": "", "datum_i_vreme": "", "oznaka_spasioca":"","trajanje_spasavanja":0,"status": 0,"svrha":-1}]
                 self.write_block(f, block)
             else:
-                block[i] = self.get_empty_rec()
+                block[i] = {"id": self.empty_key, "ime_i_prezime": "", "datum_i_vreme": "", "oznaka_spasioca":"","trajanje_spasavanja":0,"status": 0,"svrha":-1}
                 f.seek(-self.block_size, 1)
                 self.write_block(f, block)
 
@@ -55,10 +55,10 @@ class SerialFile(BinaryFile):
             if i == self.blocking_factor:  # provera da li smo popunili trenutni blok ili ne
                 f.seek(-self.block_size, 1)
                 self.write_block(f, block)
-                block = self.blocking_factor*[self.get_empty_rec()]
+                block = self.blocking_factor*[{"id": self.empty_key, "ime_i_prezime": "", "datum_i_vreme": "", "oznaka_spasioca":"","trajanje_spasavanja":0,"status": 0,"svrha":-1}]
                 self.write_block(f, block)
             else:
-                block[i] = self.get_empty_rec()
+                block[i] = {"id": self.empty_key, "ime_i_prezime": "", "datum_i_vreme": "", "oznaka_spasioca":"","trajanje_spasavanja":0,"status": 0,"svrha":-1}
                 f.seek(-self.block_size, 1)
                 self.write_block(f, block)
 

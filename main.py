@@ -90,12 +90,12 @@ if __name__ == '__main__':
                 binary_file.print_file()
         if (unos == 6):
             if binary_file != "":
-                with open(binary_file.filename, "rb+") as f, open("data/test.csv", "r") as l:
+                with open("data/test.csv", "r") as l:
                     while True:
                         temp = l.readline()
                         if not temp:
                             break
                         lista = temp.split(",")
-                        binary_file.insert_novi_element(f,{"id":int(lista[0]),"ime_i_prezime":lista[1],
+                        binary_file.insert_novi_element({"id":int(lista[0]),"ime_i_prezime":lista[1],
                                                            "datum_i_vreme":lista[2],"oznaka_spasioca":lista[3],
                                                            "trajanje_spasavanja":int(lista[4]),"status":1})
