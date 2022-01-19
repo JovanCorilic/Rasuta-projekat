@@ -31,7 +31,10 @@ class HashFile(BinaryFile):
                 q=0
                 f.seek(r*self.block_size)
                 block = self.read_block(f)
-                while q<=self.blocking_factor and broj==99:
+                if block == []:
+                    broj1 = 1
+                    return broj,broj1,r,q
+                while q<self.blocking_factor and broj==99:
                     if id==block[q]["id"] and block[q]["status"] == 1:
                         broj = 0
                     else:
@@ -145,12 +148,7 @@ class HashFile(BinaryFile):
                 print("Bucket {}".format(i + 1))
                 self.print_block(block)
 
-            print("Overflow zone:")
-            while True:
-                rec = self.read_record(f)
-                if not rec:
-                    break
-                print(rec)
+
 
 # Ispod je nevazno
 """
