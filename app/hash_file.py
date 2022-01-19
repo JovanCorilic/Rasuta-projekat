@@ -63,20 +63,29 @@ class HashFile(BinaryFile):
 
     def brisanje_u_ras_dat_sa_lin_traz(self,r,q,f):
         pomeranje = 1
-        f.seek(r*self.block_size)
+        f.seek(r * self.block_size)
         block = self.read_block(f)
-        blockp=[]
-        rp=0
+        blockp = []
+        rp = 0
+
         while pomeranje ==1:
+
+            print(block)
             while q<self.blocking_factor and block[q]["id"]!=-1:
                 try:
                     block[q] = block[q+1]
                 except:
-                    pass
+                    q = q + 1
+                    continue
                 q = q + 1
             blockp = block
             rp = r
-            if block[q]["id"]==-1:
+
+            if q==self.blocking_factor:
+                k = q - 1
+            else:
+                k = q
+            if block[k]["id"]==-1:
                 pomeranje=0
             else:
                 nadjen = 0
@@ -87,6 +96,12 @@ class HashFile(BinaryFile):
                         block = self.read_block(f)
                         q=-1
                     q = q+1
+                    if q == self.blocking_factor:
+                        continue
+                    if block == []:
+                        nadjen = 0
+                        pomeranje = 0
+                        break
                     if block[q]["id"] != -1 and r != rp:
                         nadjen = self.provera_kandidata(block[q]["id"],r,rp,nadjen)
                     else:
@@ -95,9 +110,9 @@ class HashFile(BinaryFile):
                     blockp[len(blockp)-1] = block[q]
                 else:
                     blockp[len(blockp)-1] = self.get_empty_rec()
-        if blockp !=[]:
-            f.seek(rp * self.block_size)
-            self.write_block(f,blockp)
+            if blockp !=[]:
+                f.seek(rp * self.block_size)
+                self.write_block(f,blockp)
 
     def azur_ras_sa_lin_raz_dir(self,i):
         with open(self.filename, "rb+") as f:
