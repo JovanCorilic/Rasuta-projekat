@@ -48,10 +48,7 @@ if __name__ == '__main__':
             if binary_file == "":
                 print("Morate uneti naziv aktivne datoteke!")
                 continue
-            putanja = binary_file.filename.split(".")[0] + "serial.dat"
-            rec = Record(ATTRIBUTES, FMT, CODING)
-            binary_file_serial = SerialFile(putanja, rec, F)
-            binary_file_serial.init_file()
+
             while True:
                 print("1.Napraviti slog\n"
                       "2.Izmeniti slog\n"
@@ -65,26 +62,22 @@ if __name__ == '__main__':
                     if (binary_file != ""):
                         temp = Spasavanje()
                         temp.pravljenje_objekta()
-                        binary_file_serial.insert_record_no_id_check(temp.vrati_vrednost())
+                        binary_file.azur_ras_sa_lin_raz_dir(temp.vrati_vrednost())
                 if unos == 2:
                     if (binary_file != ""):
                         temp = Spasavanje()
                         temp.promena_vrednosti()
-                        binary_file_serial.insert_record_no_id_check(temp.vrati_vrednost())
+                        binary_file.azur_ras_sa_lin_raz_dir(temp.vrati_vrednost())
                 if unos == 3:
                     if (binary_file != ""):
                         temp = Spasavanje()
                         temp.logicko_brisanje()
-                        binary_file_serial.insert_record_no_id_check(temp.vrati_vrednost())
+                        binary_file.azur_ras_sa_lin_raz_dir(temp.vrati_vrednost())
                 if unos == 4:
                     if (binary_file != ""):
                         temp = Spasavanje()
                         temp.pravo_brisanje()
-                        binary_file_serial.insert_record_no_id_check(temp.vrati_vrednost())
-
-            lista = binary_file_serial.get_content_of_file()
-            binary_file.azur_ras_sa_lin_raz_dir(lista)
-
+                        binary_file.azur_ras_sa_lin_raz_dir(temp.vrati_vrednost())
         if (unos == 5):
             if binary_file!="":
                 binary_file.print_file()

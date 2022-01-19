@@ -32,11 +32,13 @@ class HashFile(BinaryFile):
                 f.seek(r*self.block_size)
                 block = self.read_block(f)
                 while q<=self.blocking_factor and broj==99:
-                    if id==block[q]["id"]:
+                    if id==block[q]["id"] and block[q]["status"] == 1:
                         broj = 0
                     else:
                         if block[q]["id"]==-1:
                             broj=1
+                        elif id==block[q]["id"] and block[q]["status"] != 1:
+                            broj = 1
                         else:
                             q = q+1
                 if q>=self.blocking_factor:
@@ -94,26 +96,32 @@ class HashFile(BinaryFile):
             f.seek(rp * self.block_size)
             self.write_block(f,blockp)
 
-    def azur_ras_sa_lin_raz_dir(self,lista):
+    def azur_ras_sa_lin_raz_dir(self,i):
         with open(self.filename, "rb+") as f:
-            for i in lista:
-                broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
-                if broj==0:
-                    if i["svrha"]==4:
-                        self.brisanje_u_ras_dat_sa_lin_traz(r,q,f)
-                    elif i["svrha"]==2:
-                        f.seek(r*self.block_size)
-                        block = self.read_block(f)
-                        block[q]["datum_i_vreme"] = i["datum_i_vreme"]
-                        f.seek(r * self.block_size)
-                        self.write_block(f,block)
-                elif i["svrha"]==1 and broj1==0:
-                    temp = i
-                    self.insert_novi_element({"id": temp["id"], "ime_i_prezime": temp["ime_i_prezime"],
-                                              "datum_i_vreme": temp["datum_i_vreme"],
-                                              "oznaka_spasioca":temp["oznaka_spasioca"],
-                                              "trajanje_spasavanja":temp["trajanje_spasavanja"],
-                                              "status": temp["status"]})
+
+            broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
+            if broj==0:
+                if i["svrha"]==4:
+                    self.brisanje_u_ras_dat_sa_lin_traz(r,q,f)
+                elif i["svrha"]==2:
+                    f.seek(r*self.block_size)
+                    block = self.read_block(f)
+                    block[q]["datum_i_vreme"] = i["datum_i_vreme"]
+                    f.seek(r * self.block_size)
+                    self.write_block(f,block)
+                elif i["svrha"]==3:
+                    f.seek(r * self.block_size)
+                    block = self.read_block(f)
+                    block[q]["status"] = i["status"]
+                    f.seek(r * self.block_size)
+                    self.write_block(f, block)
+            elif i["svrha"]==1 and broj1==0:
+                temp = i
+                self.insert_novi_element({"id": temp["id"], "ime_i_prezime": temp["ime_i_prezime"],
+                                          "datum_i_vreme": temp["datum_i_vreme"],
+                                          "oznaka_spasioca":temp["oznaka_spasioca"],
+                                          "trajanje_spasavanja":temp["trajanje_spasavanja"],
+                                          "status": temp["status"]})
 
     def insert_novi_element(self,i):
         broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
