@@ -128,7 +128,7 @@ class HashFile(BinaryFile):
         elif broj1 == 1:
             print("Nema memorije")
         else:
-            print("slog sa datom vrednoscu kljuca " + str(i["id"])+ " vec postoji")
+            print("Slog sa datom vrednoscu kljuca " + str(i["id"])+ " vec postoji")
 
     def print_file(self):
         with open(self.filename, "rb") as f:
