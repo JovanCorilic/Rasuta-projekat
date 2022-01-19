@@ -50,36 +50,11 @@ class Spasavanje:
         self.svrha=3
     def promena_vrednosti(self):
         self.id = int(input("Unesite evidencioni broj:"))
-        while True:
-            print("Izaberite koji cete atribut da promenite( 0 je za kraj):\n"
-                  ""
-                  "1.Ime i prezime spasenog\n"
-                  "2.Datum i vreme\n"
-                  "3.Oznaka spasioca\n"
-                  "4.Trajanje spasavanja")
-            unos = int(input("Unesite opciju:"))
-            if unos==0:
-                break
+        print("Promena datuma i vremena spasavanja")
 
-            if unos==1:
-                self.ime_i_prezime = input("Ime i prezime spasenog:")
-            if unos == 2:
-                self.datum_i_vreme = input("Datum i vreme:")
-            if unos==3:
-                self.oznaka_spasioca = input("Oznaka spasioca:")
-                while True:
-                    if len(self.oznaka_spasioca) != 5:
-                        self.oznaka_spasioca = input("Oznaka spasioca mora biti tacno 5 karaktera:")
-                    else:
-                        break
-            if unos==4:
-                self.trajanje_spasavanja = int(input("Trajanje spasavanja:"))
-                while True:
-                    if self.trajanje_spasavanja > 4320:
-                        self.trajanje_spasavanja = int(input("Mora biti manje ili jednako 4320 minuta:"))
-                    else:
-                        break
-            self.svrha=2
+        self.datum_i_vreme = input("Ovde unesite:")
+        self.svrha=2
+
     def pravo_brisanje(self):
         self.id = int(input("Unesite evidencioni broj:"))
         self.svrha = 4
