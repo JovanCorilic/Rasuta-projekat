@@ -30,6 +30,8 @@ class Spasavanje:
         self.ime_i_prezime = input("Ime i prezime spasenog:")
         #self.datum_i_vreme = (datetime.now()).strftime("%d.%m.%Y %H:%M")
         self.datum_i_vreme = input("Datum i vreme:")
+        while len(self.datum_i_vreme)>17:
+            self.datum_i_vreme = input("Niste pravilno uneli datum, unesite ponovo:")
         self.oznaka_spasioca = input("Oznaka spasioca:")
         while True:
             if len(self.oznaka_spasioca)!=5:
@@ -53,6 +55,8 @@ class Spasavanje:
         print("Promena datuma i vremena spasavanja")
 
         self.datum_i_vreme = input("Ovde unesite:")
+        while len(self.datum_i_vreme)>17:
+            self.datum_i_vreme = input("Niste pravilno uneli datum, unesite ponovo:")
         self.svrha=2
 
     def pravo_brisanje(self):

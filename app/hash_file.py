@@ -69,8 +69,6 @@ class HashFile(BinaryFile):
         rp = 0
 
         while pomeranje ==1:
-
-            print(block)
             while q<self.blocking_factor and block[q]["id"]!=-1:
                 try:
                     block[q] = block[q+1]
