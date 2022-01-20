@@ -42,6 +42,7 @@ class HashFile(BinaryFile):
                             broj=1
                         elif id==block[q]["id"] and block[q]["status"] != 1:
                             broj = 1
+                            broj1 = 5
                         else:
                             q = q+1
                 if q>=self.blocking_factor:
@@ -116,6 +117,10 @@ class HashFile(BinaryFile):
         with open(self.filename, "rb+") as f:
 
             broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
+            if i["id"]!=-1 and i["svrha"]==4 and broj1==5:
+                broj=0
+            if broj1==5:
+                broj1=0
             if broj==0:
                 if i["svrha"]==4:
                     self.brisanje_u_ras_dat_sa_lin_traz(r,q,f)
@@ -138,9 +143,16 @@ class HashFile(BinaryFile):
                                           "oznaka_spasioca":temp["oznaka_spasioca"],
                                           "trajanje_spasavanja":temp["trajanje_spasavanja"],
                                           "status": temp["status"]})
+            else:
+                if broj1==1 and i["svrha"]==1:
+                    print("Nema memorije")
+                else:
+                    print("Nije nadjen slog sa zadatim ID-em!")
 
     def insert_novi_element(self,i):
         broj, broj1, r, q = self.trazenje_u_rasutoj_sa_lin_traz(i["id"])
+        if broj1==5:
+            broj1=0
         if broj == 1 and broj1 == 0:
             with open(self.filename, "rb+") as a:
                 a.seek(r * self.block_size)

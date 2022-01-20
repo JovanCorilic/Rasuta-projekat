@@ -20,7 +20,7 @@ def random_date(start, end, prop):
     return str_time_prop(start, end, '%d.%m.%Y. %H:%M', prop)
 
 def generisanje_primera():
-    naziv = input("Gde da se stave primeri:")
+    naziv = input("Naziv test csv datoteke:")
     koliko = int(input("Koliko primera: "))
     with open("data/"+naziv+".csv","w") as f:
         for i in range(koliko):

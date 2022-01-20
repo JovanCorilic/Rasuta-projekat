@@ -87,13 +87,27 @@
       <workItem from="1642624995303" duration="2935000" />
       <workItem from="1642628013436" duration="30000" />
       <workItem from="1642663027577" duration="2990000" />
+      <workItem from="1642682526894" duration="241000" />
+      <workItem from="1642683330043" duration="1877000" />
+      <workItem from="1642686462614" duration="1803000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/app/hash_file.py</url>
+          <line>118</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/Rasuta_projekat$main.coverage" NAME="main Coverage Results" MODIFIED="1642665978677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Rasuta_projekat$main.coverage" NAME="main Coverage Results" MODIFIED="1642688485162" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
